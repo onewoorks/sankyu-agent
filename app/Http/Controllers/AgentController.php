@@ -57,7 +57,7 @@ class AgentController extends Controller
     }
 
     private static function refCakuk($id){
-        $name = $name;
+        $name = '';
         switch($id){
             case 1: $name = 'CANGKUK S'; break;
             case 2: $name = 'CANGKUK KOTAK'; break;
