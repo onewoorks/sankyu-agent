@@ -29,6 +29,7 @@ class ProductModel extends Model
         dimension_Lebar as lebar,
         dimension_Dia as diameter,
         dimension_Saiz as size,
+        Upah_RAF as cakuk,
         StatusItem
         FROM data_database 
         WHERE 
