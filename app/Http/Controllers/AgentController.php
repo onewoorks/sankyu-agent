@@ -56,6 +56,22 @@ class AgentController extends Controller
         ];
     }
 
+    private static function refCakuk($id){
+        $name = $name;
+        switch($id){
+            case 1: $name = 'CANGKUK S'; break;
+            case 2: $name = 'CANGKUK KOTAK'; break;
+            case 3: $name = 'CANGKUK PANDORA'; break;
+            case 4: $name = 'CANGKUK J'; break;
+            case 5: $name = 'CANGKUK LOBSTER'; break;
+            case 6: $name = 'CANGKUK W'; break;
+            case 7: $name = 'CANGKUK T'; break;
+            default: $name = $id; break;
+        }
+        return $name;
+
+    }
+
     private static function createNewSankyuProduct($stocks){
         $data = [];
         foreach($stocks as $stock){
@@ -71,7 +87,7 @@ class AgentController extends Controller
                 'lebar'         => (float) $stock->lebar,
                 'diameter'      => (float) $stock->diameter,
                 'size'          => (float) $stock->size,
-                'cakuk'         => $stock->cakuk  
+                'cakuk'         => self::refCakuk($stock->cakuk)
             ];
         }
         SankyuProductsModel::insert($data);
