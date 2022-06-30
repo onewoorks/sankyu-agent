@@ -71,6 +71,7 @@ class AgentController extends Controller
                 'lebar'         => (float) $stock->lebar,
                 'diameter'      => (float) $stock->diameter,
                 'size'          => (float) $stock->size,
+                'cakuk'         => $stock->cakuk  
             ];
         }
         SankyuProductsModel::insert($data);
