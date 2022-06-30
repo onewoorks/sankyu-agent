@@ -66,7 +66,7 @@ class AgentController extends Controller
             case 5: $name = 'CANGKUK LOBSTER'; break;
             case 6: $name = 'CANGKUK W'; break;
             case 7: $name = 'CANGKUK T'; break;
-            default: $name = $id; break;
+            default: $name = null; break;
         }
         return $name;
 
