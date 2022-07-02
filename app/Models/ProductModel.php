@@ -35,7 +35,7 @@ class ProductModel extends Model
         WHERE 
         StatusItem = 10 AND 
         remarks IS NOT NULL
-        AND remarks NOT LIKE 'TEMPAHAN%'";
+        AND remarks NOT LIKE '%TEMPAHAN%'";
         return DB::connection('sankyu')->select($query);
     }
 }
