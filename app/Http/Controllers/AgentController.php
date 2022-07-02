@@ -25,7 +25,6 @@ class AgentController extends Controller
     }
 
     private static function addNewProducts($product_ids){
-        $product_ids = [12345];
         foreach($product_ids as $id){
             dispatch(new AddProduct($id));
         }
