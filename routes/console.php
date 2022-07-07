@@ -17,6 +17,8 @@ use App\Http\Controllers\AgentController;
 */
 
 Artisan::command('replicate_product', function(){
-    echo 'run...';
+    echo '----------------------------------' . PHP_EOL;
+    echo '| Execute Product Syncronization |' . PHP_EOL;
+    echo '----------------------------------' . PHP_EOL;
     AgentController::syncFlow();
 });
