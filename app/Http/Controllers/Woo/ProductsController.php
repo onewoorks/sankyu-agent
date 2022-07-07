@@ -10,7 +10,6 @@ class ProductsController extends Controller{
     public function deleteProduct($product_id){}
 
     public function addNewProduct($product_id){
-        dd($product_id);
         return $product_id;
     }
 }

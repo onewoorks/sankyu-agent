@@ -38,4 +38,9 @@ class ProductModel extends Model
         AND remarks NOT LIKE '%TEMPAHAN%'";
         return DB::connection('sankyu')->select($query);
     }
+
+    public static function getUploadToWoo(){
+        $query = "SELECT * FROM products";
+        return DB::connection()->select($query);
+    }
 }

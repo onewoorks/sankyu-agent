@@ -17,5 +17,6 @@ use App\Http\Controllers\AgentController;
 */
 
 Artisan::command('replicate_product', function(){
+    echo 'run...';
     AgentController::syncFlow();
 });

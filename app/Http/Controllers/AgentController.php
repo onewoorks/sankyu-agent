@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\ProductModel;
 use App\Models\ReplicateTransactionModel;
 use App\Models\SankyuProductsModel;
+use App\Models\SankyuProductsCheckModel;
 use App\Jobs\Agent\DeleteWooProduct;
 use App\Jobs\Agent\AddProduct;
+use App\Jobs\Agent\CompareSyncProduct;
 
 class AgentController extends Controller
 {
@@ -18,7 +20,12 @@ class AgentController extends Controller
         self::addNewProducts($replicate->to_be_added);
     }
 
+    private static function productUpdateCheck(){
+
+    }
+
     private static function deleteWooProducts($product_ids){
+        
         foreach($product_ids as $id){
             dispatch(new DeleteWooProduct($id));
         }
@@ -40,15 +47,21 @@ class AgentController extends Controller
             'total_offline'     => count($sankyu_products),
             'online_to_delete'  => json_encode($compare->online_to_delete),
             'online_to_add'     => json_encode($compare->online_to_add), 
+            'total_last_online' => count(ProductModel::getUploadToWoo())
         ];
+        
         if(count($compare->online_to_delete) > 0 || count($compare->online_to_add) > 0){
             ReplicateTransactionModel::insert($data);
-            SankyuProductsModel::truncate();
-            $stock_chunked = array_chunk($sankyu_products,100);
-            foreach($stock_chunked as $stocks){
-                self::createNewSankyuProduct($stocks);
-            }
+        } 
+        SankyuProductsCheckModel::truncate();
+        SankyuProductsModel::copyToCheckTable();
+        SankyuProductsModel::truncate();
+        $stock_chunked = array_chunk($sankyu_products,100);
+        foreach($stock_chunked as $stocks){
+            self::createNewSankyuProduct($stocks);
         }
+        self::checkProductDataChanges();
+        
         return (object) [
             'to_be_deleted' => $compare->online_to_delete,
             'to_be_added' => $compare->online_to_add
@@ -71,12 +84,18 @@ class AgentController extends Controller
 
     }
 
+    private static function cleanStokName($stock_name){
+        $stock_name = str_replace(array("\r", "\n"), ' ', $stock_name);
+        $stock_name = preg_replace('/\s+/', ' ', $stock_name);
+        return trim($stock_name);
+    }
+
     private static function createNewSankyuProduct($stocks){
         $data = [];
         foreach($stocks as $stock){
             $data[] = [
                 'product_id'    => $stock->product_id,
-                'stock_name'    => trim($stock->stock_name),
+                'stock_name'    => self::cleanStokName($stock->stock_name),
                 'no_tag'        => $stock->no_tag,
                 'berat'         => $stock->berat,
                 'mutu'          => $stock->mutu,
@@ -90,6 +109,20 @@ class AgentController extends Controller
             ];
         }
         SankyuProductsModel::insert($data);
+    }
+
+    private static function checkProductDataChanges(){
+        $products = SankyuProductsModel::productsTableCompare();
+        $to_update = 0;
+        foreach($products as $product){
+            if(strtolower($product->ref_table == 'new')){
+                SankyuProductsModel::updateProduct($product);
+                $to_update++;
+            }
+        }
+        if($to_update > 0){
+            dispatch(new CompareSyncProduct());
+        }
     }
 
     private static function product_ids($payloads){
@@ -119,6 +152,7 @@ class AgentController extends Controller
                 $online_to_add[] = $diff;
             }
         }
+
         return (object) [
             'online_to_delete' => $online_to_delete,
             'online_to_add' => $online_to_add
