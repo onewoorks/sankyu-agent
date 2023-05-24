@@ -45,9 +45,7 @@ class AgentController extends Controller
     }
 
     private static function deleteWooProducts($product_ids){
-        echo gettype($product_ids);
         foreach($product_ids as $id){
-            
             dispatch(new DeleteWooProduct($id));
         }
     }
