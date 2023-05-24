@@ -30,7 +30,6 @@ class AgentController extends Controller
         if(!empty($replicate)){
             if(!empty($replicate->online_to_delete)){
                 $to_delete = json_decode($replicate->online_to_delete);
-                print_r($to_delete);
                 self::deleteWooProducts($to_delete);
             }
             if(!empty($replicate->online_to_add)){
@@ -52,6 +51,7 @@ class AgentController extends Controller
 
     private static function deleteWooProducts($product_ids){
         foreach($product_ids as $id){
+            echo $id;
             dispatch(new DeleteWooProduct($id));
         }
     }
