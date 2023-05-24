@@ -22,6 +22,7 @@ class DeleteWooProduct implements ShouldQueue
      */
     public function __construct($product_id){
         $this->product_id = $product_id;
+        echo $product_id;
     }
 
     /**
