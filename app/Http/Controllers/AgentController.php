@@ -27,10 +27,11 @@ class AgentController extends Controller
 
     public static function syncReplicateTransaction($id){
         $replicate = ReplicateTransactionModel::getTransactionId($id);
+        print_r($replicate);
         if(!empty($replicate)){
             if(!empty($replicate->online_to_delete)){
                 $to_delete = json_decode($replicate->online_to_delete);
-                print_r($to_delete);
+                
                 self::deleteWooProducts($to_delete);
             }
             if(!empty($replicate->online_to_add)){
