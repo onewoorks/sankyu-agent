@@ -20,6 +20,11 @@ class AgentController extends Controller
         self::addNewProducts($replicate->to_be_added);
     }
 
+    public static function getReplication($id){
+        $replicate = ReplicateTransactionModel::getTransactionId($id);
+        return json_encode($replicate);
+    }
+
     public static function syncReplicateTransaction($id){
         $replicate = ReplicateTransactionModel::getTransactionId($id);
         if(!empty($replicate)){

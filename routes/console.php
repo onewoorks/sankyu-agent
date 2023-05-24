@@ -34,3 +34,11 @@ Artisan::command('synclast {id}', function(){
     echo '| Completed......                |' . PHP_EOL;
     echo '----------------------------------' . PHP_EOL;
 });
+
+Artisan::command('replicate_items {id}', function(){
+    $id = $this->argument('id');
+    echo '----------------------------------' . PHP_EOL;
+    echo AgentController::getReplication($id) . PHP_EOL;
+    echo '----------------------------------' . PHP_EOL;
+});
+
