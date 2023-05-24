@@ -29,9 +29,8 @@ class AgentController extends Controller
         $replicate = ReplicateTransactionModel::getTransactionId($id);
         if(!empty($replicate)){
             if(!empty($replicate->online_to_delete)){
-                print_r($replicate->online_to_delete);
                 $to_delete = json_decode($replicate->online_to_delete);
-                
+                print_r($to_delete);
                 self::deleteWooProducts($to_delete);
             }
             if(!empty($replicate->online_to_add)){
