@@ -25,6 +25,7 @@ class AgentController extends Controller
         if(!empty($replicate)){
             if(!empty($replicate->online_to_delete)){
                 $to_delete = json_decode($replicate->online_to_delete);
+                print_r($to_delete);
                 self::deleteWooProducts($to_delete);
             }
             if(!empty($replicate->online_to_add)){
