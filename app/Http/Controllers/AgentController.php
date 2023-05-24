@@ -20,13 +20,34 @@ class AgentController extends Controller
         self::addNewProducts($replicate->to_be_added);
     }
 
+    public static function syncReplicateTransaction($id){
+        $replicate = ReplicateTransactionModel::getTransactionId($id);
+        if(!empty($replicate)){
+            if(!empty($replicate->online_to_delete)){
+                $to_delete = json_decode($replicate->online_to_delete);
+                self::deleteWooProducts($to_delete);
+            }
+            if(!empty($replicate->online_to_add)){
+                $to_add = json_decode($replicate->online_to_add);
+                self::addNewProducts($to_add);
+            }
+        } else {
+            echo '| No data to add                |' . PHP_EOL;
+            
+        }
+
+        
+        
+    }
+
     private static function productUpdateCheck(){
 
     }
 
     private static function deleteWooProducts($product_ids){
-        
+        echo gettype($product_ids);
         foreach($product_ids as $id){
+            
             dispatch(new DeleteWooProduct($id));
         }
     }
@@ -61,7 +82,7 @@ class AgentController extends Controller
             self::createNewSankyuProduct($stocks);
         }
         self::checkProductDataChanges();
-        
+
         return (object) [
             'to_be_deleted' => $compare->online_to_delete,
             'to_be_added' => $compare->online_to_add
